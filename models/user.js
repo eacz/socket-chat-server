@@ -18,7 +18,6 @@ const UserSchema = Schema({
   password: {
     type: String,
     required: true,
-    unique: true
   },
   online: {
     type: Boolean,
@@ -27,7 +26,7 @@ const UserSchema = Schema({
 })
 
 UserSchema.method('toJSON', function(){
-  const {_v, _id, password, ...object} = this.toObject();
+  const {__v, _id, password, ...object} = this.toObject();
   object.id = _id;
   return object;
 })
