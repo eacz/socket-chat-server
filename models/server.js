@@ -11,7 +11,7 @@ class Server {
     this.app = express()
     this.port = process.env.PORT
     
-    dbConnection()
+    //dbConnection()
 
     this.server = http.createServer(this.app)
 
@@ -22,6 +22,11 @@ class Server {
 
   middlewares() {
     this.app.use(express.static(path.resolve(__dirname, '../public')))
+    //TODO: CORS
+
+
+    //api endpoints
+    this.app.use('/api/login', require('../routers/auth'))
   }
 
   configurateSockets() {
