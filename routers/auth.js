@@ -26,6 +26,6 @@ router.post(
   login
 )
 
-router.get('/renew', [verifyJWT], renewToken)
+router.get('/renew', verifyJWT, renewToken)
 
 module.exports = router

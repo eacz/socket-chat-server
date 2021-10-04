@@ -1,6 +1,6 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs')
 const User = require('../models/user')
-const generateJWT = require('../helpers/jwt');
+const generateJWT = require('../helpers/jwt')
 
 const createUser = async (req, res) => {
   try {
@@ -24,7 +24,7 @@ const createUser = async (req, res) => {
     const user = new User(req.body)
 
     //hash password
-    const salt = bcrypt.genSaltSync(10);
+    const salt = bcrypt.genSaltSync(10)
     user.password = bcrypt.hashSync(password, salt)
 
     await user.save()
@@ -48,18 +48,17 @@ const createUser = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body
   try {
-    const user = await User.findOne({email})
-    if(!user){
-      return res.status(404).json({ok:false, msg: 'Wrong email or password'})
+    const user = await User.findOne({ email })
+    if (!user) {
+      return res.status(404).json({ ok: false, msg: 'Wrong email or password' })
     }
-    
+
     const match = bcrypt.compareSync(password, user.password)
-    if(!match){
-      return res.status(404).json({ok: false, msg: 'Wrong email or password'})
+    if (!match) {
+      return res.status(404).json({ ok: false, msg: 'Wrong email or password' })
     }
     const token = await generateJWT(user.id)
-    res.json({ ok: true, user, token  })
-
+    res.json({ ok: true, user, token })
   } catch (error) {
     console.log(error)
     res.status(500).json({
@@ -67,12 +66,24 @@ const login = async (req, res) => {
       msg: 'Something went wrong',
     })
   }
-  
- 
 }
 
 const renewToken = async (req, res) => {
-  res.json({ ok: true, msg: 'renew' })
+  try {
+    const token = await generateJWT(req.userId)
+    const user = await User.findById(req.userId)
+    res.json({ 
+      ok: true, 
+      token,
+      user
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      ok: false,
+      msg: 'Something went wrong',
+    })
+  }
 }
 
 module.exports = {
