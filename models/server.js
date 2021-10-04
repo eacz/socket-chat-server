@@ -31,6 +31,7 @@ class Server {
 
     //api endpoints
     this.app.use('/api/login', require('../routers/auth'))
+    this.app.use('/api/messages', require('../routers/messages'))
   }
 
   configurateSockets() {
