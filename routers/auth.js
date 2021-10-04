@@ -5,6 +5,7 @@ const { check } = require('express-validator')
 const router = Router()
 const { createUser, login, renewToken } = require('../controllers/auth')
 const validateFields = require('../middlewares/validateFields')
+const verifyJWT = require('../middlewares/verifyJWT')
 
 router.post('/new', [
   check('email', 'The email is required').isEmail(),
@@ -25,6 +26,6 @@ router.post(
   login
 )
 
-router.get('/renew', renewToken)
+router.get('/renew', [verifyJWT], renewToken)
 
 module.exports = router

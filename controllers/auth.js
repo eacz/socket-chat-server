@@ -1,5 +1,6 @@
-const User = require('../models/user')
 const bcrypt = require('bcryptjs');
+const User = require('../models/user')
+const generateJWT = require('../helpers/jwt');
 
 const createUser = async (req, res) => {
   try {
@@ -28,9 +29,12 @@ const createUser = async (req, res) => {
 
     await user.save()
 
+    const token = await generateJWT(user.id)
+
     res.json({
       ok: true,
       user,
+      token,
     })
   } catch (error) {
     console.log(error)
@@ -43,7 +47,28 @@ const createUser = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body
-  res.json({ ok: true, msg: 'login' })
+  try {
+    const user = await User.findOne({email})
+    if(!user){
+      return res.status(404).json({ok:false, msg: 'Wrong email or password'})
+    }
+    
+    const match = bcrypt.compareSync(password, user.password)
+    if(!match){
+      return res.status(404).json({ok: false, msg: 'Wrong email or password'})
+    }
+    const token = await generateJWT(user.id)
+    res.json({ ok: true, user, token  })
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      ok: false,
+      msg: 'Something went wrong',
+    })
+  }
+  
+ 
 }
 
 const renewToken = async (req, res) => {
