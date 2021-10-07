@@ -6,7 +6,6 @@ const cors = require('cors');
 
 const Sockets = require('./sockets')
 const dbConnection = require('../database/config')
-const exp = require('constants')
 
 class Server {
   constructor() {
@@ -23,10 +22,10 @@ class Server {
   }
 
   middlewares() {
+    this.app.use(cors())
     this.app.use(express.static(path.resolve(__dirname, '../public')))
     this.app.use(express.json())
     
-    this.app.use(cors())
 
 
     //api endpoints

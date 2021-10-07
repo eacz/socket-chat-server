@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const User = require('../models/user')
-const generateJWT = require('../helpers/jwt')
+const { generateJWT } = require('../helpers/jwt')
 
 const createUser = async (req, res) => {
   try {
@@ -72,10 +72,10 @@ const renewToken = async (req, res) => {
   try {
     const token = await generateJWT(req.userId)
     const user = await User.findById(req.userId)
-    res.json({ 
-      ok: true, 
+    res.json({
+      ok: true,
       token,
-      user
+      user,
     })
   } catch (error) {
     console.log(error)

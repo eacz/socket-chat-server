@@ -19,7 +19,7 @@ router.post('/new', [
 router.post(
   '/',
   [
-    check('email', 'The email is required').isEmail(),
+    check('email', 'Invalid email').isEmail(),
     check('password', 'The password must be at least 8 characters').isLength({ min: 8 }),
     validateFields,
   ],
