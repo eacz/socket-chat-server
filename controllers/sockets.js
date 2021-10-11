@@ -7,6 +7,14 @@ const userConnectionChange = async (id, onlineStatus) => {
   return user;
 }
 
+const getUsers = async () => {
+  const users = await User
+    .find()
+    .sort('-online')
+  return users
+}
+
 module.exports = {
-  userConnectionChange
+  userConnectionChange,
+  getUsers
 }

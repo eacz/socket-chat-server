@@ -1,4 +1,4 @@
-const { userConnectionChange } = require("../controllers/sockets");
+const { userConnectionChange, getUsers } = require("../controllers/sockets");
 const { checkJWT } = require("../helpers/jwt");
 
 class Sockets {
@@ -24,7 +24,7 @@ class Sockets {
       //TODO know what user is active through ID
       
       //TODO emit all connected users
-
+      this.io.emit('users-list', await getUsers() )
       //TODO socket join, userId
 
       //TODO listen client messages
