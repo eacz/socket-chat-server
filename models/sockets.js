@@ -23,14 +23,14 @@ class Sockets {
       //socket join
       socket.join(id)
 
-      //TODO listen client messages
-      //personal-message
+      //listen client messages
       socket.on('personal-message', async (payload) => {
         const message = await saveMessage(payload)
-        console.log(message);
+        this.io.to(payload.to).emit('personal-message', message)
+        this.io.to(payload.from).emit('personal-message', message)
       })
 
-      //TODO disconnect, set user as offline
+      //on disconnect, set user as offline
       socket.on('disconnect', async () => {
         await userConnectionChange(id, false)
         this.io.emit('users-list', await getUsers() )
