@@ -33,6 +33,7 @@ class Sockets {
       //TODO disconnect, set user as offline
       socket.on('disconnect', async () => {
         await userConnectionChange(id, false)
+        this.io.emit('users-list', await getUsers() )
       })
     })
   }
