@@ -1,4 +1,4 @@
-const { userConnectionChange, getUsers } = require("../controllers/sockets");
+const { userConnectionChange, getUsers, saveMessage } = require("../controllers/sockets");
 const { checkJWT } = require("../helpers/jwt");
 
 class Sockets {
@@ -18,17 +18,17 @@ class Sockets {
       }
 
       await userConnectionChange(id, true)
-      //TODO validate JWT
-      //If the isn't valid, disconnect socket
-
-      //TODO know what user is active through ID
       
-      //TODO emit all connected users
       this.io.emit('users-list', await getUsers() )
-      //TODO socket join, userId
+      //socket join
+      socket.join(id)
 
       //TODO listen client messages
       //personal-message
+      socket.on('personal-message', async (payload) => {
+        const message = await saveMessage(payload)
+        console.log(message);
+      })
 
       //TODO disconnect, set user as offline
       socket.on('disconnect', async () => {
